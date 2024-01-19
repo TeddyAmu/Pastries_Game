@@ -42,7 +42,7 @@ return (
       <div className="home">
 
       <div className="logout-form">
-      <button type="button" onClick={handleLogout}>Déconnexion</button>
+      <button className="deconnexion" type="button" onClick={handleLogout}>Déconnexion</button>
       </div>
 
         <ul className="pastriesList">
@@ -53,6 +53,10 @@ return (
                 <p>
                   {pastry.name} : <span>{pastry.quantity}</span> restant(e)(s)
                 </p>
+                <div className="add-form">
+                <button className="add" type="button">Ajouter</button>
+                <button className="suppr" type="button">Supprimer</button>
+               </div>
               </li>
             ))}
         </ul>

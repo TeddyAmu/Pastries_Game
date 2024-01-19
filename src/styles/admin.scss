@@ -9,9 +9,35 @@
     flex-direction: center;
 }
 
-button {
+.add-form {
+    color: white;
+    margin: 0 auto;
+    flex-direction: center;    
+}
+
+.add{
+    border: none;
+    background-color: rgb(58, 165, 42);
+    font-size: large;
+    margin: 2rem auto;
+    color: white;
+    padding: 1.5rem;
+    border-color : black;
+}
+
+.suppr{
     border: none;
     background-color: brown;
+    font-size: large;
+    margin: 2rem auto;
+    color: white;
+    padding: 1.5rem;
+    border-color : black;
+}
+
+.deconnexion {
+    border: none;
+    background-color: rgb(31, 29, 28);
     width: 30%;
     font-size: large;
     margin: 2rem auto;
