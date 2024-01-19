@@ -68,12 +68,12 @@ function AdminPage() {
 
 return (
     <>
-              <h1>Admin</h1>
+      <h1>Admin</h1>
 
       <div className="home">
 
       <div className="logout-form">
-      <button className="deconnexion" type="button" onClick={handleLogout}>Déconnexion</button>
+      <button className="add" type="button" >Ajouter une pâtisserie</button>
       </div>
 
         <ul className="pastriesList">
@@ -85,12 +85,16 @@ return (
                   {pastry.name} : <span>{pastry.quantity}</span> restant(e)(s)
                 </p>
                 <div className="add-form">
-                <button className="add" type="button" >Ajouter</button>
+                <button className="modify" type="button">Modifier</button>
                 <button className="delete" type="button" onClick={handleDelete}>Supprimer</button>
                </div>
               </li>
             ))}
         </ul>
+      </div>
+
+      <div className="logout-form">
+      <button className="deconnexion" type="button" onClick={handleLogout}>Déconnexion</button>
       </div>
     </>
   );
