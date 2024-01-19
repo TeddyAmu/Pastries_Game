@@ -3,21 +3,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { requestLogout } from "../store/loginSlice";
 import { useEffect } from "react";
-import { requestPastries } from "../store/pastriesSlice";
+import { requestPastries, deletePastrie, modifyPastrie } from "../store/pastriesSlice";
 
 
 function AdminPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const isLogged = useSelector((state) => state.loginSliceReducer.isLogged);
-
     const { pastries } = useSelector((store) => store.pastriesSliceReducer);
 
   useEffect(() => {
     dispatch(requestPastries());
   }, []);
-
-
 
     useEffect(() => {
         if (!isLogged) {
@@ -34,6 +31,40 @@ function AdminPage() {
           console.error("Erreur lors de la déconnexion:", error.message);
         }    
       };
+
+
+      const handleDelete = (id) => {
+        try {
+          const userConfirmation = window.confirm('Voulez vous supprimer la pâtisserie ?');
+      
+        if (userConfirmation){
+          dispatch(deletePastrie(id));
+        }
+      }
+        catch (error) {
+          console.error("Erreur:", error.message);
+        }    
+      };
+
+      /*const handleAdd = () => {
+        try {
+          let name = prompt("Nom de la pâtisserie :");
+      
+          if (name === null || name.trim() === "") {
+            return;
+          }
+      
+          let quantity = Number(prompt("Nombre de pâtisserie : "));
+          const addConfirmation = window.confirm("Ajouter ${quantity} ${name} ?");
+      
+          if (addConfirmation) {
+            dispatch(addPastry({ name, quantity }));
+          }
+        } catch (error) {
+          console.error("Erreur: ", error.message);
+        }
+      };*/
+
 
 return (
     <>
@@ -54,8 +85,8 @@ return (
                   {pastry.name} : <span>{pastry.quantity}</span> restant(e)(s)
                 </p>
                 <div className="add-form">
-                <button className="add" type="button">Ajouter</button>
-                <button className="suppr" type="button">Supprimer</button>
+                <button className="add" type="button" >Ajouter</button>
+                <button className="delete" type="button" onClick={handleDelete}>Supprimer</button>
                </div>
               </li>
             ))}
