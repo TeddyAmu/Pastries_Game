@@ -1,56 +1,57 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialState = {
-    pastriesLog: false,
+    isLogged: false,
     email: "",
     password: "",
   };
 
 
-  export const requestLogin= createAsyncThunk(
-    "get/login",
-    async (email, password) => {
+  export const requestLogin = createAsyncThunk(
+    "login/requestLogin",
+    async ({email, password}) => {
       try {
-        const response = await fetch(
-          `http://localhost:3001/login`, {
-            email, password
-        }, {withCredentials: true}
+        const response = await axios.post(
+          `http://localhost:3001/login`,
+          {
+            email,
+            password,
+          },
+          { withCredentials: true }
         );
-        if (response.ok) {
-            return true;
+        if (response.status === 200) {
+          return true;
         }
       } catch (error) {
         console.error("Error:", error.message);
-        return false
+        return false;
       }
     }
   );
 
-  export const requestLogout= createAsyncThunk(
-    "get/logout",
-    async (email, password) => {
-      try {
-        const response = await fetch(
-          `http://localhost:3001/logout`, {
-            email, password
-        }, {withCredentials: true}
-        );
-        if (response.ok) {
-            return true;
+  export const requestLogout = createAsyncThunk(
+    "login/requestLogout",
+    async () => {
+        try {
+          const response = await axios.get("http://localhost:3001/logout", {
+            withCredentials: true,
+          });
+    
+          return response.status;
+        } catch (error) {
+          console.error("Error:", error.message);
+          throw error; 
         }
-      } catch (error) {
-        console.error("Error:", error.message);
-        return false
       }
-    }
-  );
+    );
 
 const loginSlice = createSlice({
-    name: "pastriesLog",
+    name: "isLogged",
     initialState,
     reducers: {
         setEmail :(state, action) => {
-            state.email = action.payload;   
+            state.email = action.payload;  
         },
         setPassword :(state, action) => {
             state.password = action.payload;   
@@ -58,8 +59,12 @@ const loginSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(requestLogin.fulfilled, (state, action) =>{
-            state.pastriesLog = action.payload;
-        } )
+            state.isLogged = action.payload;
+        })
+ 
+          builder.addCase(requestLogout.fulfilled, (state, action) => {
+            state.isLogged = false;
+        });
     },
   });
   

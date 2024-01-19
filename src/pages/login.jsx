@@ -1,39 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setEmail, setPassword } from "../store/loginSlice";
 import { requestLogin } from "../store/loginSlice";
 
 function LoginPage() {
-  const dispatch = useDispatch(); 
-  const {email, password} = useSelector((store) => store.loginSliceReducer);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {email, password, isLogged} = useSelector((store) => store.loginSliceReducer);
 
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const preventDefault = (e) => {
-    e.preventDefault();
-    console.log({ email }, { password });
 
-    if (!email || !password) {
-      setErrorMessage("Veuillez remplir tous les champs.");
-      return; 
+  useEffect(() => {
+    if (isLogged) {
+      navigate("/Admin");
     }
+  }, [isLogged]);
 
-    setEmail("");
-    setPassword("");
-    setMessage("Merci, vous allez être redirigé vers l'accueil");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(requestLogin({email, password}));    
+
+    if (!isLogged) {
+      setTimeout(() => {
+        dispatch(setEmail(""));
+        dispatch(setPassword(""));
+        setErrorMessage("Mauvaise authentification");
+      }, 500);
+    }
   };
+
+
   return (
     <>
       <h1>Connexion</h1>
       <div className="login-form">
-        <form action="/" onSubmit={(e) => dispatch (requestLogin(email, password))}>
+        <form action="/" onSubmit={handleSubmit}>
           <fieldset>
             <div>
               <label>Votre adresse mail : </label>
               <input
                 type="email"
                 value={email}
-                onChange={(e) => dispatch(setEmail(e.target.value))}
+                onChange={(e) => dispatch(setEmail(e.target.value))}required
               />
             </div>
             <div>
@@ -41,17 +51,12 @@ function LoginPage() {
               <input
                 type="password"
                 value={password}
-                onChange={(e) => dispatch(setPassword(e.target.value))}
+                onChange={(e) => dispatch(setPassword(e.target.value))}required
               />
             </div>
           </fieldset>
-          <button onClick={preventDefault} type="submit">
-            Envoyer
-          </button>
-          {message && <p className="valid">{message}</p>}
-          {!message && errorMessage && (
-            <p className="invalid">{errorMessage}</p>
-          )}
+          <button type="submit">Connexion</button>
+          {errorMessage && <p className="invalid">{errorMessage}</p>}
         </form>
       </div>
     </>

@@ -1,0 +1,20 @@
+
+.logout-form {
+    background-color: rgb(235, 235, 235);
+    color: white;
+    width: 40vw;
+    margin: 0 auto;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: center;
+}
+
+button {
+    border: none;
+    background-color: brown;
+    width: 30%;
+    font-size: large;
+    margin: 2rem auto;
+    color: white;
+    padding: 1.5rem;
+  }

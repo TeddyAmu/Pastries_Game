@@ -3,6 +3,7 @@ import HomePage from "../pages/home";
 import LoginPage from "../pages/login";
 import GamePage from "../pages/game";
 import ContactPage from "../pages/contact";
+import AdminPage from "../pages/admin";
 
 const Root = () => {
   return (
@@ -52,6 +53,11 @@ export const router = createBrowserRouter([
       {
         path: "Contact",
         element: <ContactPage />,
+      },
+      ,
+      {
+        path: "Admin",
+        element: <AdminPage />,
       },
     ],
   },
