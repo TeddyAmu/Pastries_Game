@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
 
 const initialState = {
   pastries: {},
@@ -18,7 +20,7 @@ export const requestPastries = createAsyncThunk("get/pastries", async () => {
 });
 
 
-export const deletePastrie = createAsyncThunk("delete/pastrie", async (id) => {
+/*export const deletePastrie = createAsyncThunk("delete/pastrie", async (id) => {
   try {
     const response = await axios.delete(
       `http://localhost:3001/api/pastrie/`&{id},
@@ -56,19 +58,22 @@ export const addPastrie = createAsyncThunk(
       return false;
     }
   }
-);
+);*/
 
 
-export const modifyPastrie = createAsyncThunk(
+export const modifyPastry = createAsyncThunk(
   "put/pastrie",
   async (putData) => {
     try {
+      console.log(putData);
       const response = await axios.put(
         `http://localhost:3001/api/pastrie/${putData.id}`,
-        { quantity: putData.newPastryQuantity },
+        { quantity: putData.newQuantity, name : putData.newName },
         { withCredentials: true }
       );
       if (response.status == 200) {
+        console.log(response.data);
+
         return {
           pastrie: response.data,
         };
@@ -93,7 +98,7 @@ const pastriesSlice = createSlice({
     builder.addCase(requestPastries.fulfilled, (state, action) => {
       state.pastries = action.payload;
     });
-    builder.addCase(deletePastrie.fulfilled, (state, action) => {
+    /*builder.addCase(deletePastrie.fulfilled, (state, action) => {
       if (action.payload !== false) {
         state.pastries = action.payload.response;
       }
@@ -102,10 +107,10 @@ const pastriesSlice = createSlice({
       if (action.payload !== false) {
         state.needUpdate = !state.needUpdate;
       }
-    });
-    builder.addCase(modifyPastrie.fulfilled, (state, action) => {
+    });*/
+    builder.addCase(modifyPastry.fulfilled, (state, action) => {
       if (action.payload !== false) {
-        state.needUpdate = !state.needUpdate;
+        requestPastries();
       }
     });
   },
