@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { requestLogout } from "../store/loginSlice";
 import { useEffect } from "react";
-import { requestPastries, modifyPastry } from "../store/pastriesSlice";
+import { requestPastries, modifyPastry, deletePastry, addPastry } from "../store/pastriesSlice";
 
 
 function AdminPage() {
@@ -33,48 +33,49 @@ function AdminPage() {
       };
 
 
-      /*const handleDelete = (id) => {
+      const handleDelete = (id, name) => {
         try {
-          const userConfirmation = window.confirm('Voulez vous supprimer la pâtisserie ?');
-      
-        if (userConfirmation){
-          dispatch(deletePastrie(id));
-        }
-      }
-        catch (error) {
-          console.error("Erreur:", error.message);
-        }    
-      };*/
-
-      /*const handleAdd = () => {
-        try {
-          let name = prompt("Nom de la pâtisserie :");
-      
-          if (name === null || name.trim() === "") {
-            return;
-          }
-      
-          let quantity = Number(prompt("Nombre de pâtisserie : "));
-          const addConfirmation = window.confirm("Ajouter ${quantity} ${name} ?");
-      
-          if (addConfirmation) {
-            dispatch(addPastry({ name, quantity }));
+          const userConfirmation = window.confirm(
+            `Êtes-vous sûr de vouloir supprimer la pâtisserie : ${name} ?`
+          );
+    
+          if (userConfirmation) {
+            dispatch(deletePastry(id));
           }
         } catch (error) {
-          console.error("Erreur: ", error.message);
+          console.error("Erreur : ", error);
         }
-      };*/
+      };
+    
+
+      const handleAdd = () => {
+        try {
+          let name = prompt(
+            "Entrez le nom de la pâtisserie : "
+          );
+          while (name.trim() === "") {
+            name = prompt("Donnez un nom à la pâtisserie");
+          }
+          let quantity = Number(prompt("Combien en voulez-vous ? "));
+          while (isNaN(quantity) || quantity <= 0) {
+            quantity = Number(prompt("Merci d'entrer un nombre valide"));
+          }
+          dispatch(addPastry({ name, quantity }));
+        } catch (error) {
+          console.error("Erreur : ", error);
+        }
+      };
 
 
       const handleModify = (id, name) => {
         try {
-          let newName = prompt("Entrez le nouveau nom : ");
+          let newName = prompt("Entrez un nom : ");
     
           if (newName === null || newName.trim() === "") {
             newName = name;
           }
     
-          let newQuantity = Number(prompt("Entrez la nouvelle quantité : "));
+          let newQuantity = Number(prompt("Entrez la quantité : "));
           while (newQuantity <= 0) {
             newQuantity = Number(prompt("Merci d'entrer une quantité > 0 : "));
           }
@@ -93,11 +94,11 @@ return (
       <div className="home">
 
       <div className="logout-form">
-      <button className="add" type="button" >Ajouter une pâtisserie</button>
+      <button className="add" type="button" onClick = {handleAdd}>Ajouter une pâtisserie</button>
       </div>
 
         <ul className="pastriesList">
-          {pastries.length > 0 &&
+          {pastries&& pastries.length > 0 &&
             pastries.map((pastry, index) => (
               <li
               key={index}
@@ -111,7 +112,7 @@ return (
                 </p>
                 <div className="add-form">
                 <button className="modify" type="button" onClick={() => handleModify(pastry.id, pastry.name)}>Modifier</button>
-                <button className="delete" type="button">Supprimer</button>
+                <button className="delete" type="button" onClick={() => handleDelete(pastry.id, pastry.name)}>Supprimer</button>
                </div>
               </li>
             ))}

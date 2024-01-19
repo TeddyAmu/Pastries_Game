@@ -20,46 +20,45 @@ export const requestPastries = createAsyncThunk("get/pastries", async () => {
 });
 
 
-/*export const deletePastrie = createAsyncThunk("delete/pastrie", async (id) => {
+export const deletePastry = createAsyncThunk("delete/pastrie", async (id) => {
   try {
     const response = await axios.delete(
-      `http://localhost:3001/api/pastrie/`&{id},
+      `http://localhost:3001/api/pastrie/${id}`,
       { withCredentials: true }
     );
-
     if (response.status === 200) {
+      console.log(response.data);
       return response.data;
     } else {
       return false;
     }
   } catch (error) {
-    console.error("Erreur : " + error);
+    console.error("Erreur : ", error);
     return false;
   }
 });
 
-export const addPastrie = createAsyncThunk(
+export const addPastry = createAsyncThunk(
   "post/pastrie",
-  async (postData) => {
+  async ({ name, quantity }) => {
     try {
       const response = await axios.post(
         "http://localhost:3001/api/pastrie/",
-        { name: postData.pastryName, quantity: postData.pastryQuantity },
+        {
+          name,
+          quantity,
+        },
         { withCredentials: true }
       );
-      if (response.status == 200) {
-        return {
-          pastrie: response.data,
-          image: postData.selectedImage,
-        };
+      if (response.status === 200) {
+        return response.data;
       }
     } catch (error) {
-      console.log(error);
+      console.error("Erreur : ", error);
       return false;
     }
   }
-);*/
-
+);
 
 export const modifyPastry = createAsyncThunk(
   "put/pastrie",
@@ -98,16 +97,16 @@ const pastriesSlice = createSlice({
     builder.addCase(requestPastries.fulfilled, (state, action) => {
       state.pastries = action.payload;
     });
-    /*builder.addCase(deletePastrie.fulfilled, (state, action) => {
+    builder.addCase(deletePastry.fulfilled, (state, action) => {
       if (action.payload !== false) {
         state.pastries = action.payload.response;
       }
     });
-    builder.addCase(addPastrie.fulfilled, (state, action) => {
+    builder.addCase(addPastry.fulfilled, (state, action) => {
       if (action.payload !== false) {
         state.needUpdate = !state.needUpdate;
       }
-    });*/
+    });
     builder.addCase(modifyPastry.fulfilled, (state, action) => {
       if (action.payload !== false) {
         requestPastries();
